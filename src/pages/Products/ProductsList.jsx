@@ -1,9 +1,19 @@
-import { useState } from 'react'
-import { ProductCard } from '../../components/Elements/ProductCard'
+import { useEffect, useState } from 'react'
+import { ProductCard } from '../../components/'
 import { FilterBar } from './components/FilterBar'
 
 export const ProductsList = () => {
 	const [show, setShow] = useState(false)
+	const [products, setProducts] = useState([])
+
+	useEffect(() => {
+		async function fetchProducts() {
+			const response = await fetch('http://localhost:3000/products')
+			const data = await response.json()
+			setProducts(data)
+		}
+		fetchProducts()
+	}, [])
 
 	return (
 		<main>
@@ -30,7 +40,9 @@ export const ProductsList = () => {
 				</div>
 
 				<div className='flex flex-wrap justify-center lg:flex-row'>
-					<ProductCard />
+					{products.map(product => (
+						<ProductCard key={product.id} {...product} />
+					))}
 				</div>
 			</section>
 			{show && <FilterBar setShow={setShow} />}
