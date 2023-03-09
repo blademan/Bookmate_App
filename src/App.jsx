@@ -3,7 +3,7 @@ import { AllRoutes } from './routes/AllRoutes'
 
 function App() {
 	return (
-		<div className='text-red-200'>
+		<div className='App'>
 			<Header />
 			<AllRoutes />
 			<Footer />
