@@ -1,7 +1,15 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
 
 export const Header = () => {
+	const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('theme')) || false)
+
+	useEffect(() => {
+		localStorage.setItem('theme', darkMode)
+		darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')
+	}, [darkMode])
+
 	return (
 		<header>
 			<nav className='bg-white dark:bg-gray-900'>
@@ -11,7 +19,10 @@ export const Header = () => {
 						<span className='self-center text-2xl font-semibold whitespace-nowrap dark:text-white'>CodeBook</span>
 					</Link>
 					<div className='flex items-center relative'>
-						<span className='cursor-pointer text-xl text-gray-700 dark:text-white mr-5 bi bi-gear-wide-connected'></span>
+						<span
+							onClick={() => setDarkMode(!darkMode)}
+							className='cursor-pointer text-xl text-gray-700 dark:text-white mr-5 bi bi-gear-wide-connected'
+						></span>
 						<span className='cursor-pointer text-xl text-gray-700 dark:text-white mr-5 bi bi-search'></span>
 						<Link to='/cart' className='text-gray-700 dark:text-white mr-5'>
 							<span className='text-2xl bi bi-cart-fill relative'>
