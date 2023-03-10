@@ -1,20 +1,36 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import { ProductCard } from '../../components/'
+import { Pagination } from '../../components/Elements/Pagination'
+import useProducts from '../../helper/useProducts'
 import { FilterBar } from './components/FilterBar'
 
 export const ProductsList = () => {
 	const [show, setShow] = useState(false)
-	const [products, setProducts] = useState([])
 
-	useEffect(() => {
-		async function fetchProducts() {
-			const response = await fetch('http://localhost:3000/products')
-			const data = await response.json()
-			setProducts(data)
-		}
-		fetchProducts()
-	}, [])
+	const [currentPage, setCurrentPage] = useState(1)
 
+	const {
+		data: products,
+		isLoading,
+		error,
+	} = useQuery({
+		queryKey: ['ProductsList'],
+		queryFn: () => useProducts('products'),
+	})
+
+	if (isLoading) return 'Loading...'
+
+	if (error) return 'An error has occurred: ' + error.message
+
+	const itemsPerPage = 4
+	const totalPages = Math.ceil(products.length / itemsPerPage)
+
+	const getCurrentProducts = () => {
+		const startIndex = (currentPage - 1) * itemsPerPage
+		const endIndex = startIndex + itemsPerPage
+		return products.slice(startIndex, endIndex)
+	}
 	return (
 		<main>
 			<section className='my-5'>
@@ -38,9 +54,10 @@ export const ProductsList = () => {
 						</button>
 					</span>
 				</div>
+				<Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
 				<div className='flex flex-wrap justify-center lg:flex-row'>
-					{products.map(product => (
+					{getCurrentProducts().map(product => (
 						<ProductCard key={product.id} {...product} />
 					))}
 				</div>

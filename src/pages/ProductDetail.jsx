@@ -1,20 +1,23 @@
-import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Rating } from '../components/Elements/Rating'
 
+import { useQuery } from '@tanstack/react-query'
+
+import useProducts from '../helper/useProducts'
 export const ProductDetail = () => {
-	const [product, setProduct] = useState([])
-
 	const { id } = useParams()
+	const {
+		data: product,
+		isLoading,
+		error,
+	} = useQuery({
+		queryKey: ['ProductDetail'],
+		queryFn: () => useProducts(`products/${id}`),
+	})
 
-	useEffect(() => {
-		async function fetchProducts() {
-			const response = await fetch(`http://localhost:3000/products/${id}`)
-			const data = await response.json()
-			setProduct(data)
-		}
-		fetchProducts()
-	}, [])
+	if (isLoading) return 'Loading...'
+
+	if (error) return 'An error has occurred: ' + error.message
 
 	const { best_seller, in_stock, name, long_description, price, rating, size, poster, overview } = product
 
