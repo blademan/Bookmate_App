@@ -10,7 +10,7 @@ export const ProductsList = () => {
 	const [show, setShow] = useState(false)
 	const [currentPage, setCurrentPage] = useState(1)
 	const search = useLocation().search
-	const searchTerm = new URLSearchParams(search).get('g')
+	const searchTerm = new URLSearchParams(search).get('q')
 
 	const {
 		data: products,
