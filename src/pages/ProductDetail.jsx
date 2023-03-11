@@ -16,13 +16,13 @@ export const ProductDetail = () => {
 		queryFn: () => useProducts(`products/${id}`),
 	})
 
+	useTitle(product ? product.name : 'Loading...')
+
 	if (isLoading) return 'Loading...'
 
 	if (error) return 'An error has occurred: ' + error.message
 
 	const { best_seller, in_stock, name, long_description, price, rating, size, poster, overview } = product
-
-	useTitle(name)
 
 	return (
 		<main>

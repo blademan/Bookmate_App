@@ -1,4 +1,32 @@
-export const FilterBar = ({ setShow }) => {
+import { useFilterStore } from '../../../store/FilterStore'
+
+export const FilterBar = ({ setShow, handleFilter, setCurrentPage }) => {
+	const { onlyInStock, bestSellerOnly, sortBy, rating, toggleOnlyInStock, toggleBestSellerOnly, setSortBy, setRating } =
+		useFilterStore()
+
+	const handleInStockChange = event => {
+		toggleOnlyInStock()
+		setCurrentPage(1)
+	}
+	const handleBestSellerChange = event => {
+		toggleBestSellerOnly()
+		setCurrentPage(1)
+	}
+	const handleSortBy = e => {
+		const sortByValue = e.target.value
+		setSortBy(sortByValue)
+	}
+
+	const handleRating = e => {
+		const sortRating = e.target.value
+		setRating(sortRating)
+		setCurrentPage(1)
+	}
+
+	const handleResetFilter = () => {
+		handleFilter()
+	}
+
 	return (
 		<section className='filter'>
 			<div
@@ -44,9 +72,11 @@ export const FilterBar = ({ setShow }) => {
 							<p className='font-semibold my-1'>Sort by</p>
 							<div className='flex items-center my-1'>
 								<input
+									checked={sortBy === 'low' || false}
+									onChange={e => handleSortBy(e)}
 									id='price-sort-1'
 									type='radio'
-									value=''
+									value='low'
 									name='price-sort'
 									className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600'
 								/>
@@ -56,9 +86,11 @@ export const FilterBar = ({ setShow }) => {
 							</div>
 							<div className='flex items-center my-1'>
 								<input
+									checked={sortBy === 'high' || false}
+									onChange={e => handleSortBy(e)}
 									id='price-sort-2'
 									type='radio'
-									value=''
+									value='high'
 									name='price-sort'
 									className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600'
 								/>
@@ -71,9 +103,11 @@ export const FilterBar = ({ setShow }) => {
 							<span className='font-semibold'>Rating</span>
 							<div className='flex items-center my-1'>
 								<input
+									onChange={handleRating}
+									checked={rating === '4' || false}
 									id='rating-sort-1'
 									type='radio'
-									value=''
+									value='4'
 									name='rating-sort'
 									className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600'
 								/>
@@ -83,9 +117,11 @@ export const FilterBar = ({ setShow }) => {
 							</div>
 							<div className='flex items-center my-1'>
 								<input
+									onChange={handleRating}
+									checked={rating === '3' || false}
 									id='rating-sort-2'
 									type='radio'
-									value=''
+									value='3'
 									name='rating-sort'
 									className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600'
 								/>
@@ -95,9 +131,11 @@ export const FilterBar = ({ setShow }) => {
 							</div>
 							<div className='flex items-center my-1'>
 								<input
+									onChange={handleRating}
+									checked={rating === '2' || false}
 									id='rating-sort-3'
 									type='radio'
-									value=''
+									value='2'
 									name='rating-sort'
 									className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600'
 								/>
@@ -107,9 +145,11 @@ export const FilterBar = ({ setShow }) => {
 							</div>
 							<div className='flex items-center my-1'>
 								<input
+									onChange={handleRating}
+									checked={rating === '1' || false}
 									id='rating-sort-4'
 									type='radio'
-									value=''
+									value='1'
 									name='rating-sort'
 									className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600'
 								/>
@@ -122,6 +162,8 @@ export const FilterBar = ({ setShow }) => {
 							<span className='font-semibold'>Other Filters</span>
 							<div className='flex items-center my-1'>
 								<input
+									onChange={() => handleBestSellerChange()}
+									checked={bestSellerOnly || false}
 									id='best-seller'
 									type='checkbox'
 									value=''
@@ -133,6 +175,8 @@ export const FilterBar = ({ setShow }) => {
 							</div>
 							<div className='flex items-center my-1'>
 								<input
+									checked={onlyInStock || false}
+									onChange={e => handleInStockChange(e)}
 									id='only-instock'
 									type='checkbox'
 									value=''
@@ -145,6 +189,7 @@ export const FilterBar = ({ setShow }) => {
 						</li>
 						<li className='mt-1 mb-5 px-1'>
 							<button
+								onClick={handleResetFilter}
 								type='button'
 								className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-10 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'
 							>

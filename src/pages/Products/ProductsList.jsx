@@ -5,6 +5,7 @@ import { ProductCard } from '../../components/'
 import { Pagination } from '../../components/Elements/Pagination'
 import useProducts from '../../helper/useProducts'
 import { useTitle } from '../../helper/useTitle'
+import { useFilterStore } from '../../store/FilterStore'
 import { FilterBar } from './components/FilterBar'
 
 export const ProductsList = () => {
@@ -12,38 +13,51 @@ export const ProductsList = () => {
 	const [currentPage, setCurrentPage] = useState(1)
 	const search = useLocation().search
 	const searchTerm = new URLSearchParams(search).get('q')
-	useTitle('All Products')
+
 	const {
-		data: products,
-		isLoading,
-		error,
-		refetch,
-	} = useQuery({
-		queryKey: ['ProductsList'],
-		queryFn: () => useProducts(`${searchTerm ? 'products?name_like=' + searchTerm : 'products'}`),
+		setReset,
+		setProductList, // add setProductList to access the store's method
+	} = useFilterStore()
+
+	const showCurrentProductList = useFilterStore(state => state.getCurrentProductList())
+
+	useTitle('All Products')
+	const { isLoading, error, refetch } = useQuery({
+		queryKey: ['ProductsList'], // add filter as a dependency
+		queryFn: () => useProducts(`${searchTerm ? 'products?name_like=' + searchTerm : 'products'}`), // pass filter to useProducts helper function
+		onSuccess: setProductList,
 	})
 
 	useEffect(() => {
 		refetch()
 	}, [searchTerm])
 
-	if (isLoading) return 'Loading...'
-
-	if (error) return 'An error has occurred: ' + error.message
-
 	const itemsPerPage = 4
-	const totalPages = Math.ceil(products.length / itemsPerPage)
+	const totalPages = Math.ceil(showCurrentProductList.length / itemsPerPage)
 
 	const getCurrentProducts = () => {
 		const startIndex = (currentPage - 1) * itemsPerPage
 		const endIndex = startIndex + itemsPerPage
-		return products.slice(startIndex, endIndex)
+		let currentList = showCurrentProductList.slice(startIndex, endIndex)
+		return currentList
 	}
+
+	const handleFilter = newFilter => {
+		setReset(prevFilter => ({ ...prevFilter, ...newFilter }))
+		setCurrentPage(1)
+		refetch()
+	}
+
+	if (isLoading) return 'Loading...'
+
+	if (error) return 'An error has occurred: ' + error.message
 	return (
 		<main>
 			<section className='my-5'>
 				<div className='my-5 flex justify-between'>
-					<span className='text-2xl font-semibold dark:text-slate-100 mb-5'>All eBooks ({products.length})</span>
+					<span className='text-2xl font-semibold dark:text-slate-100 mb-5'>
+						All eBooks ({showCurrentProductList.length})
+					</span>
 					<span>
 						<button
 							onClick={() => setShow(!show)}
@@ -70,7 +84,7 @@ export const ProductsList = () => {
 					))}
 				</div>
 			</section>
-			{show && <FilterBar setShow={setShow} />}
+			{show && <FilterBar setShow={setShow} handleFilter={handleFilter} setCurrentPage={setCurrentPage} />}
 		</main>
 	)
 }
