@@ -4,6 +4,7 @@ import { Rating } from '../components/Elements/Rating'
 import { useQuery } from '@tanstack/react-query'
 
 import useProducts from '../helper/useProducts'
+import { useTitle } from '../helper/useTitle'
 export const ProductDetail = () => {
 	const { id } = useParams()
 	const {
@@ -20,6 +21,8 @@ export const ProductDetail = () => {
 	if (error) return 'An error has occurred: ' + error.message
 
 	const { best_seller, in_stock, name, long_description, price, rating, size, poster, overview } = product
+
+	useTitle(name)
 
 	return (
 		<main>

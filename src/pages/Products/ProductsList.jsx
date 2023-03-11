@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 import { ProductCard } from '../../components/'
 import { Pagination } from '../../components/Elements/Pagination'
 import useProducts from '../../helper/useProducts'
+import { useTitle } from '../../helper/useTitle'
 import { FilterBar } from './components/FilterBar'
 
 export const ProductsList = () => {
@@ -11,7 +12,7 @@ export const ProductsList = () => {
 	const [currentPage, setCurrentPage] = useState(1)
 	const search = useLocation().search
 	const searchTerm = new URLSearchParams(search).get('q')
-
+	useTitle('All Products')
 	const {
 		data: products,
 		isLoading,
