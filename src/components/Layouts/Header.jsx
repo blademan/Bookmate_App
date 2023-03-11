@@ -39,7 +39,7 @@ export const Header = () => {
 				</div>
 			</nav>
 
-			{isSearchOpen && <Search />}
+			{isSearchOpen && <Search setIsSearchOpen={setIsSearchOpen} />}
 		</header>
 	)
 }

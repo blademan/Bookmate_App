@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { ProductCard } from '../../components/'
 import { Pagination } from '../../components/Elements/Pagination'
 import useProducts from '../../helper/useProducts'
@@ -7,17 +8,23 @@ import { FilterBar } from './components/FilterBar'
 
 export const ProductsList = () => {
 	const [show, setShow] = useState(false)
-
 	const [currentPage, setCurrentPage] = useState(1)
+	const search = useLocation().search
+	const searchTerm = new URLSearchParams(search).get('g')
 
 	const {
 		data: products,
 		isLoading,
 		error,
+		refetch,
 	} = useQuery({
 		queryKey: ['ProductsList'],
-		queryFn: () => useProducts('products'),
+		queryFn: () => useProducts(`${searchTerm ? 'products?name_like=' + searchTerm : 'products'}`),
 	})
+
+	useEffect(() => {
+		refetch()
+	}, [searchTerm])
 
 	if (isLoading) return 'Loading...'
 
