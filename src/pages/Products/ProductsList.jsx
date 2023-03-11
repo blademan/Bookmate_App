@@ -14,18 +14,21 @@ export const ProductsList = () => {
 	const search = useLocation().search
 	const searchTerm = new URLSearchParams(search).get('q')
 
-	const {
-		setReset,
-		setProductList, // add setProductList to access the store's method
-	} = useFilterStore()
-
+	const setProductList = useFilterStore(state => state.setProductList)
+	const setReset = useFilterStore(state => state.setReset)
+	const sortBy = useFilterStore(state => state.sortBy)
 	const showCurrentProductList = useFilterStore(state => state.getCurrentProductList())
 
 	useTitle('All Products')
+	useEffect(() => {
+		setCurrentPage(1) // reset page when sortBy changes
+	}, [sortBy])
+
 	const { isLoading, error, refetch } = useQuery({
-		queryKey: ['ProductsList'], // add filter as a dependency
-		queryFn: () => useProducts(`${searchTerm ? 'products?name_like=' + searchTerm : 'products'}`), // pass filter to useProducts helper function
+		queryKey: ['ProductsList', searchTerm],
+		queryFn: () => useProducts(`${searchTerm ? 'products?name_like=' + searchTerm : 'products'}`),
 		onSuccess: setProductList,
+		enabled: Boolean(searchTerm),
 	})
 
 	useEffect(() => {
@@ -42,8 +45,8 @@ export const ProductsList = () => {
 		return currentList
 	}
 
-	const handleFilter = newFilter => {
-		setReset(prevFilter => ({ ...prevFilter, ...newFilter }))
+	const handleFilter = () => {
+		setReset()
 		setCurrentPage(1)
 		refetch()
 	}

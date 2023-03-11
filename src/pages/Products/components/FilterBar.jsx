@@ -15,6 +15,7 @@ export const FilterBar = ({ setShow, handleFilter, setCurrentPage }) => {
 	const handleSortBy = e => {
 		const sortByValue = e.target.value
 		setSortBy(sortByValue)
+		setCurrentPage(1)
 	}
 
 	const handleRating = e => {
