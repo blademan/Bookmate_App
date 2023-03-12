@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ProductCard } from '../../components/'
 import { Pagination } from '../../components/Elements/Pagination'
+import { useCloseSearchBar } from '../../helper/useCloseSearchBar'
 import useProducts from '../../helper/useProducts'
 import { useTitle } from '../../helper/useTitle'
 import { useFilterStore } from '../../store/FilterStore'
@@ -13,16 +14,15 @@ export const ProductsList = () => {
 	const [currentPage, setCurrentPage] = useState(1)
 	const search = useLocation().search
 	const searchTerm = new URLSearchParams(search).get('q')
+	const navigate = useNavigate()
+	const [isSearchOpen, closeSearchBar] = useCloseSearchBar()
 
 	const setProductList = useFilterStore(state => state.setProductList)
 	const setReset = useFilterStore(state => state.setReset)
-	const sortBy = useFilterStore(state => state.sortBy)
+
 	const showCurrentProductList = useFilterStore(state => state.getCurrentProductList())
 
 	useTitle('All Products')
-	useEffect(() => {
-		setCurrentPage(1) // reset page when sortBy changes
-	}, [sortBy])
 
 	const { isLoading, error, refetch } = useQuery({
 		queryKey: ['ProductsList', searchTerm],
@@ -48,7 +48,15 @@ export const ProductsList = () => {
 	const handleFilter = () => {
 		setReset()
 		setCurrentPage(1)
-		refetch()
+		navigate('/products')
+	}
+
+	const filterToggle = () => {
+		if (isSearchOpen) {
+			closeSearchBar()
+		}
+		console.log(isSearchOpen)
+		setShow(!show)
 	}
 
 	if (isLoading) return 'Loading...'
@@ -63,7 +71,7 @@ export const ProductsList = () => {
 					</span>
 					<span>
 						<button
-							onClick={() => setShow(!show)}
+							onClick={() => filterToggle()}
 							className='inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-gray-100 rounded-lg hover:bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-700'
 							type='button'
 						>
@@ -79,7 +87,12 @@ export const ProductsList = () => {
 						</button>
 					</span>
 				</div>
-				<Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
+				{showCurrentProductList.length === 0 ? (
+					<button onClick={() => navigate('/products')}>Back</button>
+				) : (
+					<Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+				)}
 
 				<div className='flex flex-wrap justify-center lg:flex-row'>
 					{getCurrentProducts().map(product => (

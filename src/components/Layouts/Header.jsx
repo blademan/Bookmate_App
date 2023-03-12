@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
+import { useCloseSearchBar } from '../../helper/useCloseSearchBar'
 import { Search } from '../Sections/Search'
 
 export const Header = () => {
 	const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('theme')) || false)
-	const [isSearchOpen, setIsSearchOpen] = useState(false)
+	const [isSearchOpen, closeSearchBar] = useCloseSearchBar()
 
 	useEffect(() => {
 		localStorage.setItem('theme', darkMode)
@@ -26,7 +27,7 @@ export const Header = () => {
 							className='cursor-pointer text-xl text-gray-700 dark:text-white mr-5 bi bi-gear-wide-connected'
 						></span>
 						<span
-							onClick={() => setIsSearchOpen(!isSearchOpen)}
+							onClick={() => closeSearchBar()}
 							className='cursor-pointer text-xl text-gray-700 dark:text-white mr-5 bi bi-search'
 						></span>
 						<Link to='/cart' className='text-gray-700 dark:text-white mr-5'>
@@ -39,7 +40,7 @@ export const Header = () => {
 				</div>
 			</nav>
 
-			{isSearchOpen && <Search setIsSearchOpen={setIsSearchOpen} />}
+			{isSearchOpen && <Search />}
 		</header>
 	)
 }

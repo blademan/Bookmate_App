@@ -1,7 +1,9 @@
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCloseSearchBar } from '../../helper/useCloseSearchBar'
 
-export const Search = ({ setIsSearchOpen }) => {
+export const Search = () => {
+	const [isSearchOpen, closeSearchBar] = useCloseSearchBar()
 	const navigate = useNavigate()
 
 	const searchRef = useRef()
@@ -9,7 +11,7 @@ export const Search = ({ setIsSearchOpen }) => {
 	const handleSearch = e => {
 		e.preventDefault()
 		navigate(`/products?q=${searchRef.current.value}`)
-		setIsSearchOpen(false)
+		closeSearchBar()
 	}
 
 	return (
