@@ -1,5 +1,5 @@
 import { Footer, Header } from './components'
-import { ScrollToTop } from './helper/ScrollToTop'
+import { ScrollToTop } from './helper'
 import { AllRoutes } from './routes/AllRoutes'
 
 function App() {

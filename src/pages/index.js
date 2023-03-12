@@ -1,3 +1,8 @@
+export { CartPage } from './Cart/CartPage'
+export { DashboardPage } from './Dashboard/DashboardPage'
 export { HomePage } from './Home/HomePage'
+export { Login } from './Login'
+export { OrderPage } from './Order/OrderPage'
 export { ProductDetail } from './ProductDetail'
 export { ProductsList } from './Products/ProductsList'
+export { Register } from './Register'
