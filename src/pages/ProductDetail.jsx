@@ -1,10 +1,8 @@
+import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { Rating } from '../components/Elements/Rating'
 
-import { useQuery } from '@tanstack/react-query'
-
-import useProducts from '../helper/useProducts'
-import { useTitle } from '../helper/useTitle'
+import { useProducts, useTitle } from '../helper'
 export const ProductDetail = () => {
 	const { id } = useParams()
 	const {

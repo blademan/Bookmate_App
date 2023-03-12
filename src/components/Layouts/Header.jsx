@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
-import { useCloseSearchBar } from '../../helper/useCloseSearchBar'
-import { Search } from '../Sections/Search'
-
+import { useCloseSearchBar } from '../../helper'
+import { Search } from '../index'
 export const Header = () => {
 	const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('theme')) || false)
 	const [isSearchOpen, closeSearchBar] = useCloseSearchBar()

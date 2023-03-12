@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { ProductCard } from '../../../components'
-import useProducts from '../../../helper/useProducts'
+import { useProducts } from '../../../helper'
 
 export const FeaturedProducts = () => {
 	const {

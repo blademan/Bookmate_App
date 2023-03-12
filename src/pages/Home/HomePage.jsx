@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTitle } from '../../helper/useTitle'
+import { useTitle } from '../../helper'
 import { Faq } from './components/Faq'
 import { FeaturedProducts } from './components/FeaturedProducts'
 import { Hero } from './components/Hero'

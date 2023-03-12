@@ -1,11 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ProductCard } from '../../components/'
-import { Pagination } from '../../components/Elements/Pagination'
-import { useCloseSearchBar } from '../../helper/useCloseSearchBar'
-import useProducts from '../../helper/useProducts'
-import { useTitle } from '../../helper/useTitle'
+import { Pagination, ProductCard } from '../../components/'
+import { useCloseSearchBar, useProducts, useTitle } from '../../helper'
 import { useFilterStore } from '../../store/FilterStore'
 import { FilterBar } from './components/FilterBar'
 

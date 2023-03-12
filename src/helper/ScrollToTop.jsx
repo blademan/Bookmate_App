@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigationType } from 'react-router-dom'
 
-export const SmoothScroll = ({ children }) => {
+export const ScrollToTop = ({ children }) => {
 	const location = useLocation()
 	const navType = useNavigationType()
 
