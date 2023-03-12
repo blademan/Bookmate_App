@@ -1,16 +1,22 @@
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
 import { useCloseSearchBar } from '../../helper'
-import { Search } from '../index'
+import { DropdownLoggedIn, DropdownLoggedOut, Search } from '../index'
+
+const darkModeAtom = atomWithStorage('darkMode', false)
+
 export const Header = () => {
-	const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('theme')) || false)
-	const [isSearchOpen, closeSearchBar] = useCloseSearchBar()
+	const [dropdown, setDropdown] = useState(false)
+	const [darkMode, setDarkMode] = useAtom(darkModeAtom)
 
 	useEffect(() => {
-		localStorage.setItem('theme', darkMode)
-		darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')
+		document.documentElement.classList.toggle('dark')
 	}, [darkMode])
+
+	const [isSearchOpen, closeSearchBar] = useCloseSearchBar()
 
 	return (
 		<header>
@@ -34,7 +40,11 @@ export const Header = () => {
 								<span className='text-white text-sm absolute -top-1 left-2.5 bg-rose-500 px-1 rounded-full '>0</span>
 							</span>
 						</Link>
-						<span className='bi bi-person-circle cursor-pointer text-2xl text-gray-700 dark:text-white'></span>
+						<span
+							onClick={() => setDropdown(!dropdown)}
+							className='bi bi-person-circle cursor-pointer text-2xl text-gray-700 dark:text-white'
+						></span>
+						{dropdown && <DropdownLoggedIn />}
 					</div>
 				</div>
 			</nav>

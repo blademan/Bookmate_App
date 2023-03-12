@@ -1,3 +1,5 @@
+export { DropdownLoggedIn } from './Elements/DropdownLoggedIn'
+export { DropdownLoggedOut } from './Elements/DropdownLoggedOut'
 export { Pagination } from './Elements/Pagination'
 export { ProductCard } from './Elements/ProductCard'
 export { Rating } from './Elements/Rating'

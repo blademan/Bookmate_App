@@ -52,7 +52,7 @@ export const ProductsList = () => {
 		if (isSearchOpen) {
 			closeSearchBar()
 		}
-		console.log(isSearchOpen)
+
 		setShow(!show)
 	}
 
