@@ -12,6 +12,7 @@ export const Header = () => {
 	const [dropdown, setDropdown] = useState(false)
 	const [darkMode, setDarkMode] = useAtom(darkModeAtom)
 
+	// Toggle the dark mode class on the document element when darkMode changes
 	useEffect(() => {
 		document.documentElement.classList.toggle('dark')
 	}, [darkMode])
