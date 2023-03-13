@@ -45,7 +45,7 @@ export const Header = () => {
 							onClick={() => setDropdown(!dropdown)}
 							className='bi bi-person-circle cursor-pointer text-2xl text-gray-700 dark:text-white'
 						></span>
-						{dropdown && <DropdownLoggedIn />}
+						{dropdown && <DropdownLoggedOut />}
 					</div>
 				</div>
 			</nav>
