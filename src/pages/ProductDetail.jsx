@@ -1,9 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { Rating } from '../components/Elements/Rating'
+import { useCartStore } from '../store/CartStore'
 
+import { useEffect, useState } from 'react'
 import { useProducts, useTitle } from '../helper'
 export const ProductDetail = () => {
+	const [inCart, setInCart] = useState(false)
+	const cartList = useCartStore(state => state.cartList)
+	const removeProduct = useCartStore(state => state.removeProduct)
+	const addToCart = useCartStore(state => state.addToCart)
+
 	const { id } = useParams()
 	const {
 		data: product,
@@ -15,6 +22,20 @@ export const ProductDetail = () => {
 	})
 
 	useTitle(product ? product.name : 'Loading...')
+
+	useEffect(() => {
+		setInCart(cartList.some(item => item.id === id))
+	}, [cartList, id])
+
+	const handleAddToCart = () => {
+		addToCart({ id, name, poster, price })
+		setInCart(true)
+	}
+
+	const handleRemoveProduct = () => {
+		removeProduct(id)
+		setInCart(false)
+	}
 
 	if (isLoading) return 'Loading...'
 
@@ -63,12 +84,22 @@ export const ProductDetail = () => {
 							</span>
 						</p>
 						<p className='my-3'>
-							<button
-								className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800`}
-							>
-								Add To Cart <i className='ml-1 bi bi-plus-lg'></i>
-							</button>
-							{/* <button className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800`}  disabled={ product.in_stock ? "" : "disabled" }>Remove Item <i className="ml-1 bi bi-trash3"></i></button> */}
+							{inCart ? (
+								<button
+									onClick={handleRemoveProduct}
+									className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800`}
+									disabled={product.in_stock ? '' : 'disabled'}
+								>
+									Remove Item <i className='ml-1 bi bi-trash3'></i>
+								</button>
+							) : (
+								<button
+									onClick={handleAddToCart}
+									className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800`}
+								>
+									Add To Cart <i className='ml-1 bi bi-plus-lg'></i>
+								</button>
+							)}
 						</p>
 						<p className='text-lg text-gray-900 dark:text-slate-200'>{long_description}</p>
 					</div>

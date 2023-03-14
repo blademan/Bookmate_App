@@ -1,25 +1,38 @@
 import { useState } from 'react'
+import { useCartStore } from '../../../store/CartStore'
+import { CartCard } from './CartCard'
+import { Checkout } from './Checkout'
 
 export const CartList = () => {
+	const [checkOut, setCheckOut] = useState(false)
+
+	const total = useCartStore(state => state.total)
+	const cartList = useCartStore(state => state.cartList)
+
 	return (
 		<>
 			<section>
 				<p className='text-2xl text-center font-semibold dark:text-slate-100 my-10 underline underline-offset-8'>
-					My Cart (7)
+					My Cart ({cartList.length})
 				</p>
 			</section>
 
-			<section>all products</section>
+			<section>
+				{cartList.map(product => (
+					<CartCard key={product.id} {...product} />
+				))}
+			</section>
 
 			<section className='max-w-4xl m-auto'>
 				<div className='flex flex-col p-2 border-b dark:border-slate-700 text-lg dark:text-slate-100'>
 					<p className='flex justify-between my-2'>
 						<span className='font-semibold'>Total Amount:</span>
-						<span>$999</span>
+						<span>${total}</span>
 					</p>
 				</div>
 				<div className='text-right my-5'>
 					<button
+						onClick={() => setCheckOut(true)}
 						type='button'
 						className='text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-base px-7 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700'
 					>
@@ -27,6 +40,8 @@ export const CartList = () => {
 					</button>
 				</div>
 			</section>
+
+			{checkOut && <Checkout setCheckOut={setCheckOut} />}
 		</>
 	)
 }
