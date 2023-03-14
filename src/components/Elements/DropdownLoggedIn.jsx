@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-// import { toast } from "react-toastify";
+import { toast } from 'react-toastify'
 // import { getUser, logout } from "../../services";
 
-export const DropdownLoggedIn = () => {
+export const DropdownLoggedIn = ({ setDropdown }) => {
+	const navigate = useNavigate()
+	const logOutHandler = () => {
+		navigate('/')
+		toast.success('Logout successful')
+		sessionStorage.removeItem('token')
+		sessionStorage.removeItem('cbid')
+		setDropdown(false)
+	}
 	return (
 		<div
 			id='dropdownAvatar'
@@ -15,6 +23,7 @@ export const DropdownLoggedIn = () => {
 			<ul className='py-1 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownUserAvatarButton'>
 				<li>
 					<Link
+						onClick={() => setDropdown(false)}
 						to='/products'
 						className='block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
 					>
@@ -23,6 +32,7 @@ export const DropdownLoggedIn = () => {
 				</li>
 				<li>
 					<Link
+						onClick={() => setDropdown(false)}
 						to='/dashboard'
 						className='block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
 					>
@@ -31,7 +41,10 @@ export const DropdownLoggedIn = () => {
 				</li>
 			</ul>
 			<div className='py-1'>
-				<span className='cursor-pointer block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white'>
+				<span
+					onClick={logOutHandler}
+					className='cursor-pointer block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white'
+				>
 					Log out
 				</span>
 			</div>

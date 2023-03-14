@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-export const DropdownLoggedOut = () => {
+export const DropdownLoggedOut = ({ setDropdown }) => {
 	return (
 		<div
 			id='dropdownAvatar'

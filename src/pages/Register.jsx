@@ -21,10 +21,16 @@ export const Register = () => {
 	}
 
 	const mutation = useMutation(mutateFn, {
-		onSuccess: () => {
+		onSuccess: response => {
+			console.log(response)
 			navigate('/login')
 			toast.success('Registration successful!')
+			if (response.data.accessToken) {
+				sessionStorage.setItem('token', response.data.accessToken)
+				sessionStorage.setItem('cbid', response.data.user.id)
+			}
 		},
+
 		// Handle errors by logging them to the console
 		onError: error => {
 			console.log(error)

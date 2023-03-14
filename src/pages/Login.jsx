@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -7,7 +7,7 @@ import { useTitle } from '../helper'
 
 export const Login = () => {
 	const navigate = useNavigate()
-
+	const queryClient = useQueryClient()
 	// Use the useTitle hook to update the page title
 	useTitle('Login')
 
@@ -24,10 +24,15 @@ export const Login = () => {
 	}
 
 	const mutation = useMutation(mutateFn, {
-		onSuccess: () => {
+		onSuccess: response => {
 			navigate('/products')
 			toast.success('Login successful!')
+			if (response.data.accessToken) {
+				sessionStorage.setItem('token', response.data.accessToken)
+				sessionStorage.setItem('cbid', response.data.user.id)
+			}
 		},
+
 		// Handle errors by logging them to the console
 		onError: error => {
 			console.log(error)

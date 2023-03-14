@@ -11,6 +11,7 @@ const darkModeAtom = atomWithStorage('darkMode', false)
 export const Header = () => {
 	const [dropdown, setDropdown] = useState(false)
 	const [darkMode, setDarkMode] = useAtom(darkModeAtom)
+	const token = sessionStorage.getItem('token')
 
 	// Toggle the dark mode class on the document element when darkMode changes
 	useEffect(() => {
@@ -45,7 +46,12 @@ export const Header = () => {
 							onClick={() => setDropdown(!dropdown)}
 							className='bi bi-person-circle cursor-pointer text-2xl text-gray-700 dark:text-white'
 						></span>
-						{dropdown && <DropdownLoggedOut />}
+						{dropdown &&
+							(token ? (
+								<DropdownLoggedIn setDropdown={setDropdown} />
+							) : (
+								<DropdownLoggedOut setDropdown={setDropdown} />
+							))}
 					</div>
 				</div>
 			</nav>
