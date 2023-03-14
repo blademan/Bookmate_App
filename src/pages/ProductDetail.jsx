@@ -88,16 +88,20 @@ export const ProductDetail = () => {
 								<button
 									onClick={handleRemoveProduct}
 									className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800`}
-									disabled={product.in_stock ? '' : 'disabled'}
+									disabled={in_stock ? '' : 'disabled'}
 								>
 									Remove Item <i className='ml-1 bi bi-trash3'></i>
 								</button>
 							) : (
 								<button
+									disabled={in_stock ? '' : 'disabled'}
 									onClick={handleAddToCart}
-									className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800`}
+									className={`${
+										in_stock ? 'bg-blue-700 hover:bg-blue-800' : 'bg-gray-700'
+									} inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white  rounded-lg `}
 								>
-									Add To Cart <i className='ml-1 bi bi-plus-lg'></i>
+									{in_stock ? 'Add To Cart' : 'Out of Stock'}
+									<i className='ml-1 bi bi-plus-lg'></i>
 								</button>
 							)}
 						</p>

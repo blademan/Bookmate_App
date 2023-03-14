@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useCartStore } from '../../store/CartStore'
 import { Rating } from './Rating'
 
-export const ProductCard = ({ id, name, overview, price, poster, rating, best_seller }) => {
+export const ProductCard = ({ id, name, overview, price, poster, rating, best_seller, in_stock }) => {
 	const [inCart, setInCart] = useState(false)
 	const cartList = useCartStore(state => state.cartList)
 	const addToCart = useCartStore(state => state.addToCart)
@@ -54,10 +54,13 @@ export const ProductCard = ({ id, name, overview, price, poster, rating, best_se
 						</button>
 					) : (
 						<button
+							disabled={in_stock ? '' : 'disabled'}
 							onClick={handleAddToCart}
-							className='inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800'
+							className={`${in_stock ? 'bg-blue-700 hover:bg-blue-800' : 'bg-gray-700'}
+							
+							inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white  rounded-lg `}
 						>
-							Add To Cart <i className='ml-1 bi bi-plus-lg'></i>
+							{in_stock ? 'Add To Cart' : 'Out of Stock'} <i className='ml-1 bi bi-plus-lg'></i>
 						</button>
 					)}
 				</p>
