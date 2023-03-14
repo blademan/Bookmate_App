@@ -1,38 +1,43 @@
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { useTitle } from '../helper'
+
 export const Login = () => {
-	// useTitle("Login");
-	// const navigate = useNavigate();
-	// const email = useRef();
-	// const password = useRef();
+	const navigate = useNavigate()
 
-	// async function handleLogin(event){
-	//   event.preventDefault();
-	//   try{
-	//     const authDetail = {
-	//       email: email.current.value,
-	//       password: password.current.value
-	//     }
-	//     const data = await login(authDetail);
-	//     data.accessToken ? navigate("/products") : toast.error(data);
-	//   } catch(error){
-	//     toast.error(error.message, {closeButton: true, position: "bottom-center"});
-	//   }
-	// }
+	// Use the useTitle hook to update the page title
+	useTitle('Login')
 
-	// async function handleLoginGuest(){
-	//   email.current.value = process.env.REACT_APP_GUEST_LOGIN;
-	//   password.current.value = process.env.REACT_APP_GUEST_PASSWORD;
-	//   try{
-	//     const authDetail = {
-	//       email: email.current.value,
-	//       password: password.current.value
-	//     }
-	//     const data = await login(authDetail);
-	//     data.accessToken ? navigate("/products") : toast.error(data);
-	//   } catch(error){
-	//     toast.error(error.message, {closeButton: true, position: "bottom-center"});
-	//   }
-	// }
+	// Initialize the useForm hook to handle form state and validation
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm()
 
+	// Initialize the useMutation hook to handle the form submission and API call using axios
+	const mutateFn = authDetail => {
+		return axios.post('http://localhost:8000/login', authDetail)
+	}
+
+	const mutation = useMutation(mutateFn, {
+		onSuccess: () => {
+			navigate('/products')
+			toast.success('Login successful!')
+		},
+		// Handle errors by logging them to the console
+		onError: error => {
+			console.log(error)
+			toast.error(error.response.data)
+		},
+	})
+	// Handle form submission by calling the useMutation hook
+	const onSubmit = data => {
+		mutation.mutate(data)
+	}
 	return (
 		<main>
 			<section>
@@ -40,13 +45,13 @@ export const Login = () => {
 					Login
 				</p>
 			</section>
-			<form>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className='mb-6'>
 					<label htmlFor='email' className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
 						Your email
 					</label>
 					<input
-						// ref={email}
+						{...register('email')}
 						type='email'
 						id='email'
 						className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
@@ -60,7 +65,7 @@ export const Login = () => {
 						Your password
 					</label>
 					<input
-						// ref={password}
+						{...register('password')}
 						type='password'
 						id='password'
 						className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'

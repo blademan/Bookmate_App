@@ -13,11 +13,7 @@ export const Register = () => {
 	useTitle('Register')
 
 	// Initialize the useForm hook to handle form state and validation
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm()
+	const { register, handleSubmit } = useForm()
 
 	// Initialize the useMutation hook to handle the form submission and API call using axios
 	const mutateFn = authDetail => {
@@ -75,7 +71,6 @@ export const Register = () => {
 						autoComplete='off'
 						required
 					/>
-					{errors.email && <span>This field is required 888</span>}
 				</div>
 				<div className='mb-6'>
 					<label htmlFor='password' className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
