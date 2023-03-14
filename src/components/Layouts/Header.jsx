@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
 import { useCloseSearchBar } from '../../helper'
 import { useCartStore } from '../../store/CartStore'
@@ -14,6 +14,13 @@ export const Header = () => {
 	const [dropdown, setDropdown] = useState(false)
 	const [darkMode, setDarkMode] = useAtom(darkModeAtom)
 	const token = sessionStorage.getItem('token')
+	let totalInCart = cartList.length
+
+	const location = useLocation()
+	useEffect(() => {
+		// execute on location change
+		setDropdown(false)
+	}, [location])
 
 	// Toggle the dark mode class on the document element when darkMode changes
 	useEffect(() => {
@@ -42,7 +49,7 @@ export const Header = () => {
 						<Link to='/cart' className='text-gray-700 dark:text-white mr-5'>
 							<span className='text-2xl bi bi-cart-fill relative'>
 								<span className='text-white text-sm absolute -top-1 left-2.5 bg-rose-500 px-1 rounded-full '>
-									{cartList.length}
+									{totalInCart}
 								</span>
 							</span>
 						</Link>

@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { useCartStore } from '../../store/CartStore'
 // import { getUser, logout } from "../../services";
 
 export const DropdownLoggedIn = ({ setDropdown }) => {
+	const clearAll = useCartStore(state => state.clearAll)
 	const navigate = useNavigate()
 	const logOutHandler = () => {
 		navigate('/')
 		toast.success('Logout successful')
 		sessionStorage.removeItem('token')
 		sessionStorage.removeItem('cbid')
+		sessionStorage.removeItem('cart_storage')
 		setDropdown(false)
+		clearAll()
 	}
 	return (
 		<div
