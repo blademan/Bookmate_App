@@ -1,10 +1,40 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { getUser, sendOrder } from '../../../services'
 import { useCartStore } from '../../../store/CartStore'
 
 export const Checkout = ({ setCheckOut }) => {
+	const cartList = useCartStore(state => state.cartList)
 	const total = useCartStore(state => state.total)
+	const { data: userData, isLoading, isError, error } = getUser()
+	const { mutate, error: mutationError } = sendOrder()
+
+	// Define a function to handle payment logic
+	const handlePayment = async e => {
+		e.preventDefault()
+
+		const order = {
+			cartList: cartList,
+			amount_paid: total,
+			quantity: cartList.length,
+			user: {
+				name: userData.name,
+				email: userData.email,
+				id: userData.id,
+			},
+		}
+		mutate(order)
+	}
+
+	if (isLoading) {
+		return <p>Loading</p>
+	}
+
+	if (isError || mutationError) {
+		console.error('Error fetching user data or processing order:', error || mutationError)
+		return <p>Something went wrong</p>
+	}
+
+	const { name, email } = userData
+
 	return (
 		<section>
 			<div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50'></div>
@@ -42,7 +72,7 @@ export const Checkout = ({ setCheckOut }) => {
 							<h3 className='mb-4 text-xl font-medium text-gray-900 dark:text-white'>
 								<i className='bi bi-credit-card mr-2'></i>CARD PAYMENT
 							</h3>
-							<form className='space-y-6'>
+							<form onSubmit={e => handlePayment(e)} className='space-y-6'>
 								<div>
 									<label htmlFor='name' className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
 										Name:
@@ -52,7 +82,7 @@ export const Checkout = ({ setCheckOut }) => {
 										name='name'
 										id='name'
 										className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:value-gray-400 dark:text-white'
-										value='undefined'
+										value={name || ''}
 										disabled
 										required=''
 									/>
@@ -66,7 +96,7 @@ export const Checkout = ({ setCheckOut }) => {
 										name='email'
 										id='email'
 										className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:value-gray-400 dark:text-white'
-										value={'backup@example.com'}
+										value={email || ''}
 										disabled
 										required=''
 									/>

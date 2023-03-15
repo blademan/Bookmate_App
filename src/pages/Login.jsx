@@ -1,47 +1,21 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import { useTitle } from '../helper'
+import { useLogin } from '../services'
 
 export const Login = () => {
-	const navigate = useNavigate()
-	const queryClient = useQueryClient()
 	// Use the useTitle hook to update the page title
 	useTitle('Login')
 
 	// Initialize the useForm hook to handle form state and validation
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm()
+	const { register, handleSubmit } = useForm()
+	const { mutate, isLoading } = useLogin()
 
-	// Initialize the useMutation hook to handle the form submission and API call using axios
-	const mutateFn = authDetail => {
-		return axios.post('http://localhost:8000/login', authDetail)
+	const onSubmit = data => {
+		mutate(data)
 	}
 
-	const mutation = useMutation(mutateFn, {
-		onSuccess: response => {
-			navigate('/products')
-			toast.success('Login successful!')
-			if (response.data.accessToken) {
-				sessionStorage.setItem('token', response.data.accessToken)
-				sessionStorage.setItem('cbid', response.data.user.id)
-			}
-		},
-
-		// Handle errors by logging them to the console
-		onError: error => {
-			console.log(error)
-			toast.error(error.response.data)
-		},
-	})
-	// Handle form submission by calling the useMutation hook
-	const onSubmit = data => {
-		mutation.mutate(data)
+	if (isLoading) {
+		return <p>Loading</p>
 	}
 	return (
 		<main>
@@ -85,7 +59,7 @@ export const Login = () => {
 				</button>
 			</form>
 			<button
-				// onClick={handleLoginGuest}
+				disabled={isLoading}
 				className='mt-3 cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
 			>
 				Login As Guest

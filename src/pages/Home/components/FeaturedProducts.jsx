@@ -1,16 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
 import { ProductCard } from '../../../components'
-import { useProducts } from '../../../helper'
+import { useFeatureProduct } from '../../../services'
 
 export const FeaturedProducts = () => {
-	const {
-		data: products,
-		isLoading,
-		error,
-	} = useQuery({
-		queryKey: ['product'],
-		queryFn: () => useProducts('featured_products'),
-	})
+	const { data: products, isLoading, error } = useFeatureProduct()
 
 	if (isLoading) return 'Loading...'
 
