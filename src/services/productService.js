@@ -4,7 +4,7 @@ import { useFilterStore } from '../store/FilterStore'
 
 export const useProductsDetails = id => {
 	async function fetchData(url) {
-		const { data } = await axios(`http://localhost:8000/products/${url}`)
+		const { data } = await axios(`http://localhost:8000/444/products/${url}`)
 		return data
 	}
 	return useQuery(['ProductDetail'], () => fetchData(`${id}`))
@@ -13,7 +13,7 @@ export const useProductsDetails = id => {
 export function useProductList(searchTerm) {
 	const setProductList = useFilterStore(state => state.setProductList)
 	const fetchList = async url => {
-		const { data } = await axios(`http://localhost:8000/${url}`)
+		const { data } = await axios(`http://localhost:8000/444/${url}`)
 		return data
 	}
 
@@ -27,7 +27,7 @@ export function useProductList(searchTerm) {
 
 export function useFeatureProduct() {
 	const fetchList = async url => {
-		const { data } = await axios(`http://localhost:8000/${url}`)
+		const { data } = await axios(`http://localhost:8000/444/${url}`)
 		return data
 	}
 

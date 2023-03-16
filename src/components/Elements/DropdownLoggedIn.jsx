@@ -1,20 +1,29 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useLogout } from '../../services'
+import { getUser, useLogout } from '../../services'
 
 export const DropdownLoggedIn = ({ setDropdown }) => {
 	const navigate = useNavigate()
+
+	const { data: userData, error } = getUser()
+
 	const logOutHandler = () => {
 		navigate('/')
 		useLogout()
 		setDropdown(false)
 	}
+
+	if (error) {
+		console.error(error)
+		return null
+	}
+	const userEmail = userData?.email || 'User'
 	return (
 		<div
 			id='dropdownAvatar'
 			className='select-none	absolute top-10 right-0 z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600'
 		>
 			<div className='py-3 px-4 text-sm text-gray-900 dark:text-white'>
-				<div className='font-medium truncate'>Email</div>
+				<div className='font-medium truncate'>{userEmail}</div>
 			</div>
 			<ul className='py-1 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownUserAvatarButton'>
 				<li>
