@@ -1,38 +1,49 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 import { useFilterStore } from '../store/FilterStore'
 
-export const useProductsDetails = id => {
-	async function fetchData(url) {
-		const { data } = await axios(`http://localhost:8000/444/products/${url}`)
-		return data
-	}
-	return useQuery(['ProductDetail'], () => fetchData(`${id}`))
+const apiUrl = import.meta.env.VITE_API_BASE_URL
+// fetch data for a single product
+async function fetchProductData(id) {
+	const { data } = await axios(`${apiUrl}/444/products/${id}`)
+	return data
 }
 
+// custom hook to fetch product details
+export function useProductDetails(id) {
+	return useQuery(['productDetails', id], () => fetchProductData(id))
+}
+
+// fetch data for a list of products
+async function fetchProductList(searchTerm) {
+	const { data } = await axios(`${apiUrl}/444/products${searchTerm ? '?name_like=' + searchTerm : ''}`)
+	return data
+}
+
+// custom hook to fetch product list
 export function useProductList(searchTerm) {
 	const setProductList = useFilterStore(state => state.setProductList)
-	const fetchList = async url => {
-		const { data } = await axios(`http://localhost:8000/444/${url}`)
-		return data
-	}
 
 	return useQuery({
-		queryKey: ['ProductsList', searchTerm],
-		queryFn: () => fetchList(`${searchTerm ? 'products?name_like=' + searchTerm : 'products'}`),
-		onSuccess: setProductList,
+		queryKey: ['productList', searchTerm],
+		queryFn: () => fetchProductList(searchTerm),
+		onSuccess: data => setProductList(data),
+		onError: () => toast.error('Error fetching product list'),
 		enabled: Boolean(searchTerm),
 	})
 }
 
-export function useFeatureProduct() {
-	const fetchList = async url => {
-		const { data } = await axios(`http://localhost:8000/444/${url}`)
-		return data
-	}
+// fetch data for a list of featured products
+async function fetchFeaturedProducts() {
+	const { data } = await axios(`${apiUrl}/444/featured_products`)
+	return data
+}
 
+// custom hook to fetch featured products
+export function useFeaturedProduct() {
 	return useQuery({
-		queryKey: ['product'],
-		queryFn: () => fetchList('featured_products'),
+		queryKey: ['featuredProducts'],
+		queryFn: () => fetchFeaturedProducts(),
 	})
 }

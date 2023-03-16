@@ -3,16 +3,14 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useCartStore } from '../store/CartStore'
-const USER_ENDPOINT = 'http://localhost:8000/600/users/'
-const ORDER_ENDPOINT = 'http://localhost:8000/660/orders/'
-const USER_ORDER_ENDPOINT = 'http://localhost:8000/660/orders?user.id='
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL
 export function getUser() {
 	const { token, cbid } = sessionStorage
 	// Define a function to fetch user data from the API
 	async function fetchUser() {
 		try {
-			const response = await axios(`${USER_ENDPOINT}${cbid}`, {
+			const response = await axios(`${apiUrl}/600/users/${cbid}`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`,
@@ -36,7 +34,7 @@ export function createOrder() {
 
 	const fetchOrder = async order => {
 		try {
-			const response = await axios.post(`${ORDER_ENDPOINT}`, order, {
+			const response = await axios.post(`${apiUrl}/660/orders/`, order, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`,
@@ -77,7 +75,7 @@ export function createOrder() {
 export function useGetUserOrders() {
 	const { token, cbid } = sessionStorage
 	async function fetchUserCart() {
-		const response = await axios(`${USER_ORDER_ENDPOINT}${cbid}`, {
+		const response = await axios(`${apiUrl}/660/orders?user.id=${cbid}`, {
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${token}`,

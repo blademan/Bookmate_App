@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Rating } from '../components/Elements/Rating'
 import { useTitle } from '../helper'
-import { useProductsDetails } from '../services'
+import { useProductDetails } from '../services'
 import { useCartStore } from '../store/CartStore'
 
 export const ProductDetail = () => {
@@ -13,7 +13,7 @@ export const ProductDetail = () => {
 
 	const { id } = useParams()
 
-	const { data: product, isLoading, error } = useProductsDetails(id)
+	const { data: product, isLoading, error } = useProductDetails(id)
 
 	useTitle(product ? product.name : 'Loading...')
 

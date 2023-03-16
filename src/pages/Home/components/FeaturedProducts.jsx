@@ -1,8 +1,8 @@
 import { ProductCard } from '../../../components'
-import { useFeatureProduct } from '../../../services'
+import { useFeaturedProduct } from '../../../services'
 
 export const FeaturedProducts = () => {
-	const { data: products, isLoading, error } = useFeatureProduct()
+	const { data: products, isLoading, error } = useFeaturedProduct()
 
 	if (isLoading) return 'Loading...'
 

@@ -6,47 +6,53 @@ import { toast } from 'react-toastify'
 const apiUrl = import.meta.env.VITE_API_BASE_URL
 
 export const useLogin = () => {
-	const mutateFn = authDetail => {
-		return axios.post(`${apiUrl}/login`, authDetail)
+	const loginMutation = async authDetail => {
+		const response = await axios.post(`${apiUrl}/login`, authDetail)
+		if (response.data.accessToken) {
+			sessionStorage.setItem('token', response.data.accessToken)
+			sessionStorage.setItem('cbid', response.data.user.id)
+		}
+		return response.data
 	}
+
 	const navigate = useNavigate()
 
-	return useMutation(mutateFn, {
-		onSuccess: response => {
+	return useMutation(loginMutation, {
+		onSuccess: data => {
 			navigate('/products')
-			toast.success('Login successful!')
-			if (response.data.accessToken) {
-				sessionStorage.setItem('token', response.data.accessToken)
-				sessionStorage.setItem('cbid', response.data.user.id)
-			}
+			toast.success(`Welcome ${data.user.name} `)
 		},
 
+		// Handle errors by displaying them using toast
 		onError: error => {
-			console.log(error)
-			toast.error(error.response.data)
+			console.error(error)
+			toast.error(error.response?.data || 'Network Error')
 		},
 	})
 }
 
 export const useRegister = () => {
-	const mutateFn = authDetail => {
-		return axios.post(`${apiUrl}/register`, authDetail)
+	const registerMutation = async authDetail => {
+		const response = await axios.post(`${apiUrl}/register`, authDetail)
+		if (response.data.accessToken) {
+			sessionStorage.setItem('token', response.data.accessToken)
+			sessionStorage.setItem('cbid', response.data.user.id)
+		}
+		return response.data
 	}
+
 	const navigate = useNavigate()
-	return useMutation(mutateFn, {
-		onSuccess: response => {
+
+	return useMutation(registerMutation, {
+		onSuccess: data => {
 			navigate('/login')
 			toast.success('Registration successful!')
-			if (response.data.accessToken) {
-				sessionStorage.setItem('token', response.data.accessToken)
-				sessionStorage.setItem('cbid', response.data.user.id)
-			}
 		},
 
-		// Handle errors by logging them to the console
+		// Handle errors by displaying them using toast
 		onError: error => {
-			console.log(error)
-			toast.error(error.response.data)
+			console.error(error)
+			toast.error(error.response?.data || 'Network Error')
 		},
 	})
 }
