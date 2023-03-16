@@ -1,12 +1,12 @@
 import { useTitle } from '../..//helper/useTitle'
-import { useGetUserCart } from '../../services'
+import { useGetUserOrders } from '../../services'
 import { DashboardCard } from './components/DashboardCard'
 import { DashboardEmpty } from './components/DashboardEmpty'
 
 export const DashboardPage = () => {
 	useTitle('Dashboard')
 
-	const { data: orders, isLoading } = useGetUserCart()
+	const { data: orders, isLoading } = useGetUserOrders()
 
 	if (isLoading) {
 		return <p>Loading</p>

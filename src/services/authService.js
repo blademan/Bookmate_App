@@ -50,3 +50,9 @@ export const useRegister = () => {
 		},
 	})
 }
+
+export function useLogout() {
+	toast.success('Logout successful')
+	sessionStorage.removeItem('token')
+	sessionStorage.removeItem('cbid')
+}

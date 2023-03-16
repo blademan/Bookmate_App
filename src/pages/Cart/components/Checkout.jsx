@@ -1,11 +1,11 @@
-import { getUser, sendOrder } from '../../../services'
+import { createOrder, getUser } from '../../../services'
 import { useCartStore } from '../../../store/CartStore'
 
 export const Checkout = ({ setCheckOut }) => {
 	const cartList = useCartStore(state => state.cartList)
 	const total = useCartStore(state => state.total)
 	const { data: userData, isLoading, isError, error } = getUser()
-	const { mutate, error: mutationError } = sendOrder()
+	const { mutate, error: mutationError } = createOrder()
 
 	// Define a function to handle payment logic
 	const handlePayment = async e => {

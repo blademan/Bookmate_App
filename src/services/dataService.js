@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { useCartStore } from '../store/CartStore'
 const USER_ENDPOINT = 'http://localhost:8000/600/users/'
 const ORDER_ENDPOINT = 'http://localhost:8000/660/orders/'
+const USER_ORDER_ENDPOINT = 'http://localhost:8000/660/orders?user.id='
 
 export function getUser() {
 	const { token, cbid } = sessionStorage
@@ -28,7 +29,7 @@ export function getUser() {
 	return useQuery(['user'], fetchUser)
 }
 
-export function sendOrder() {
+export function createOrder() {
 	const { token } = sessionStorage
 	const clearCart = useCartStore(state => state.clearAll)
 	const navigate = useNavigate()
@@ -71,4 +72,18 @@ export function sendOrder() {
 			})
 		},
 	})
+}
+
+export function useGetUserOrders() {
+	const { token, cbid } = sessionStorage
+	async function fetchUserCart() {
+		const response = await axios(`${USER_ORDER_ENDPOINT}${cbid}`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		return response.data
+	}
+	return useQuery(['userCart'], fetchUserCart)
 }
