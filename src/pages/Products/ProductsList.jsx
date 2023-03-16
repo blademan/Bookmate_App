@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Pagination, ProductCard } from '../../components/'
-import { useCloseSearchBar, useProducts, useTitle } from '../../helper'
+import { useCloseSearchBar, useTitle } from '../../helper'
+import { useProductList } from '../../services'
 import { useFilterStore } from '../../store/FilterStore'
 import { FilterBar } from './components/FilterBar'
 
@@ -13,20 +13,13 @@ export const ProductsList = () => {
 	const searchTerm = new URLSearchParams(search).get('q')
 	const navigate = useNavigate()
 	const [isSearchOpen, closeSearchBar] = useCloseSearchBar()
-
-	const setProductList = useFilterStore(state => state.setProductList)
 	const setReset = useFilterStore(state => state.setReset)
 
 	const showCurrentProductList = useFilterStore(state => state.getCurrentProductList())
 
 	useTitle('All Products')
 
-	const { isLoading, error, refetch } = useQuery({
-		queryKey: ['ProductsList', searchTerm],
-		queryFn: () => useProducts(`${searchTerm ? 'products?name_like=' + searchTerm : 'products'}`),
-		onSuccess: setProductList,
-		enabled: Boolean(searchTerm),
-	})
+	const { isLoading, error, refetch } = useProductList(searchTerm)
 
 	useEffect(() => {
 		refetch()

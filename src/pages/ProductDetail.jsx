@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Rating } from '../components/Elements/Rating'
+import { useTitle } from '../helper'
+import { useProductDetails } from '../services'
 import { useCartStore } from '../store/CartStore'
 
-import { useEffect, useState } from 'react'
-import { useProducts, useTitle } from '../helper'
 export const ProductDetail = () => {
 	const [inCart, setInCart] = useState(false)
 	const cartList = useCartStore(state => state.cartList)
@@ -12,14 +12,8 @@ export const ProductDetail = () => {
 	const addToCart = useCartStore(state => state.addToCart)
 
 	const { id } = useParams()
-	const {
-		data: product,
-		isLoading,
-		error,
-	} = useQuery({
-		queryKey: ['ProductDetail'],
-		queryFn: () => useProducts(`products/${id}`),
-	})
+
+	const { data: product, isLoading, error } = useProductDetails(id)
 
 	useTitle(product ? product.name : 'Loading...')
 
