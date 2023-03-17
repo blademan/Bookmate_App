@@ -47,13 +47,13 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 		<div className='flex justify-center my-5'>
 			<ul className='pagination flex items-center'>
 				<li>
-					<button className='mx-2' onClick={handlePrevClick} disabled={currentPage === 1}>
-						Previous
+					<button className='mx-2 dark:bg-slate-400' onClick={handlePrevClick} disabled={currentPage === 1}>
+						Prev
 					</button>
 				</li>
 				{pages}
 				<li>
-					<button className='mx-2' onClick={handleNextClick} disabled={currentPage === totalPages}>
+					<button className='mx-2 dark:bg-slate-400' onClick={handleNextClick} disabled={currentPage === totalPages}>
 						Next
 					</button>
 				</li>
