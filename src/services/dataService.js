@@ -5,48 +5,49 @@ import { toast } from 'react-toastify'
 import { useCartStore } from '../store/CartStore'
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL
-export function getUser() {
-	const { token, cbid } = sessionStorage
-	// Define a function to fetch user data from the API
-	async function fetchUser() {
-		try {
-			const response = await axios(`${apiUrl}/600/users/${cbid}`, {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
-			})
-			return response.data
-		} catch (error) {
-			console.error('Error fetching user data:', error)
-			throw error
-		}
-	}
 
-	// Use the useQuery hook to fetch user data from the API
+// Get user data
+async function fetchUser() {
+	const { token, cbid } = sessionStorage
+	try {
+		const response = await axios(`${apiUrl}/600/users/${cbid}`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		return response.data
+	} catch (error) {
+		console.error('Error fetching user data:', error)
+		throw error
+	}
+}
+
+export function getUser() {
 	return useQuery(['user'], fetchUser)
 }
 
-export function createOrder() {
+// Create Order
+async function fetchOrder(order) {
 	const { token } = sessionStorage
+	try {
+		const response = await axios.post(`${apiUrl}/660/orders/`, order, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		return response.data
+	} catch (error) {
+		console.error('Error sending order data:', error)
+		throw error
+	}
+}
+
+export function createOrder() {
 	const clearCart = useCartStore(state => state.clearAll)
 	const navigate = useNavigate()
-
-	const fetchOrder = async order => {
-		try {
-			const response = await axios.post(`${apiUrl}/660/orders/`, order, {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
-			})
-
-			return response.data
-		} catch (error) {
-			console.error('Error sending order data:', error)
-			throw error
-		}
-	}
 
 	return useMutation(fetchOrder, {
 		onSuccess: response => {
@@ -72,16 +73,18 @@ export function createOrder() {
 	})
 }
 
-export function useGetUserOrders() {
+// Get User Orders
+async function fetchUserCart() {
 	const { token, cbid } = sessionStorage
-	async function fetchUserCart() {
-		const response = await axios(`${apiUrl}/660/orders?user.id=${cbid}`, {
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
-			},
-		})
-		return response.data
-	}
+	const response = await axios(`${apiUrl}/660/orders?user.id=${cbid}`, {
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`,
+		},
+	})
+	return response.data
+}
+
+export function useGetUserOrders() {
 	return useQuery(['userCart'], fetchUserCart)
 }
